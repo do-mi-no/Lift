@@ -12,10 +12,6 @@ public class Floor {
         return liftQueue;
     }
 
-    public void setLiftQueue(Queue liftQueue) {
-        this.liftQueue = liftQueue;
-    }
-
     @Override
     public String toString() {
         return "Floor{" +

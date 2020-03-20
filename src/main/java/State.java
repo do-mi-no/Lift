@@ -1,9 +1,8 @@
-public abstract class State {
+public interface State {
 
-    abstract void next(Lift lift);
+    void next(Controller controller);
 
-    @Override
-    public String toString() {
-        return "State{}";
+    default String printInfo(){
+        return getClass().getName();
     }
 }

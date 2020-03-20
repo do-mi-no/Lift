@@ -5,8 +5,7 @@ public class Lift {
     private final int capacity;
 
     private int level = 0;
-    private Queue passengers = new Queue();
-    private State state = new StateStart();
+    private final Queue passengers = new Queue();
 
     private Lift(int capacity) {
         this.capacity = capacity;
@@ -15,6 +14,9 @@ public class Lift {
     synchronized static void init(int capacity){
         if(lift != null){
             throw new AssertionError("Lift already initialized.");
+        }
+        if(capacity<5){
+            throw new IllegalArgumentException("Lift capacity must be at least 5.");
         }
         lift = new Lift(capacity);
     }
@@ -37,24 +39,19 @@ public class Lift {
     List<Integer> getPassengers() {
         return passengers.getQueue();
     }
-    void addPassengers(Integer[] passengers) {
+
+    void addPersons(Integer[] passengers) {
         this.passengers.addPersons(passengers);
     }
-    State getState() {
-        return state;
-    }
 
-    void setState(State state) {
-        this.state = state;
-    }
-    void takeThePassenger(int passenger){
+    void addPerson(int passenger){
         if(isFull()){
             throw new IllegalArgumentException("The lift is already full.");
         }
         passengers.addPerson(passenger);
     }
 
-    void dropOffThePassenger(int passenger){
+    void removePerson(int passenger){
         passengers.removePerson(passenger);
     }
 
@@ -66,17 +63,12 @@ public class Lift {
         return passengers.getQueue().size() >= capacity;
     }
 
-    void nextFloor(){
-        state.next(this);
-    }
-
     @Override
     public String toString() {
         return "Lift{" +
                 "capacity=" + capacity +
                 ", level=" + level +
                 ", passengers=" + passengers +
-                ", state=" + state +
                 '}';
     }
 }

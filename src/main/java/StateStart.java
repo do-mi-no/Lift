@@ -1,7 +1,11 @@
-public class StateStart extends State {
+public class StateStart implements State {
 
     @Override
-    void next(Lift lift) {
-        lift.setState(new StateGoUp());
+    public void next(Controller controller) {
+        controller.setState(new StateGoUp());
+    }
+
+    public String toString() {
+        return printInfo();
     }
 }

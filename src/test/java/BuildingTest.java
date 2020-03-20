@@ -35,11 +35,11 @@ class BuildingTest {
         assertEquals(2, building.getFloor(1).getLiftQueue().getQueue().size());
         assertEquals(1, building.getFloor(2).getLiftQueue().getQueue().size());
         assertEquals(0, building.getFloor(3).getLiftQueue().getQueue().size());
-        assertTrue(building.getFloorsQueue(1).contains(2));
-        assertTrue(building.getFloorsQueue(1).contains(3));
-        assertTrue(building.getFloorsQueue(2).contains(1));
-        assertTrue(building.getFloorsQueue(6).contains(4));
-        assertEquals(7, building.getFloorsNumbers().size());
+        assertTrue(building.getFloorQueue(1).contains(2));
+        assertTrue(building.getFloorQueue(1).contains(3));
+        assertTrue(building.getFloorQueue(2).contains(1));
+        assertTrue(building.getFloorQueue(6).contains(4));
+        assertEquals(7, building.getFloorIndexes().size());
     }
 
 }

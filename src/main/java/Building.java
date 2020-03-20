@@ -16,24 +16,28 @@ public class Building {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Building{" +
-                "floors=" + floors +
-                '}';
+    public List<Floor> getAllQueues(int floorNum) {
+        return new ArrayList<>(floors.values());
     }
 
     public Floor getFloor(int floorNum) {
         return floors.get(floorNum);
     }
 
-    public List<Integer> getFloorsQueue(int floorNumber) {
+    public List<Integer> getFloorQueue(int floorNumber) {
         return floors.get(floorNumber).getLiftQueue().getQueue();
     }
 
-    public List<Integer> getFloorsNumbers() {
+    public List<Integer> getFloorIndexes() {
         return new ArrayList<>(floors.keySet());
     }
 
 
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "floors=" + floors +
+                '}';
+    }
 }

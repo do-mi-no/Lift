@@ -1,6 +1,12 @@
-public class StateGoUp extends State {
+public class StateGoUp implements State {
     @Override
-    void next(Lift lift) {
+    public void next(Controller controller) {
         //todo:
+
+        int nextStop = controller.getNextStopGoingUp();
+    }
+
+    public String toString() {
+        return printInfo();
     }
 }

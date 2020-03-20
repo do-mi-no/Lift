@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,11 +24,19 @@ class Queue {
         queue.addAll(Arrays.asList(persons));
     }
 
-    public boolean removePerson(Integer person) {
+    public void removePerson(Integer person) {
         if(!queue.contains(person)){
             throw new IllegalArgumentException("Queue doesn't contain '" + person + "'.");
         }
-        return queue.remove(person);
+        queue.remove(person);
     }
 
+//    getAndRemoveFirstMeetingCriteria()
+
+    @Override
+    public String toString() {
+        return "Queue{" +
+                "queue=" + queue +
+                '}';
+    }
 }

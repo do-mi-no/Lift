@@ -23,8 +23,8 @@ public class Building {
                 '}';
     }
 
-    public Floor getFloor(int floorNumber) {
-        return floors.get(floorNumber);
+    public Floor getFloor(int floorNum) {
+        return floors.get(floorNum);
     }
 
     public List<Integer> getFloorsQueue(int floorNumber) {

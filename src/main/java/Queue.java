@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 class Queue {
@@ -28,7 +29,7 @@ class Queue {
 
     public void removePerson(Integer person) {
         if(!queue.contains(person)){
-            throw new IllegalArgumentException("Queue doesn't contain '" + person + "'.");
+            throw new NoSuchElementException("Queue doesn't contain '" + person + "'.");
         }
         queue.remove(person);
     }

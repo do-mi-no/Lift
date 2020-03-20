@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class Queue {
     private List<Integer> queue = new LinkedList<>();
@@ -8,8 +9,9 @@ class Queue {
     public Queue() {
     }
 
-    public Queue(Integer[] persons) {
-        this.queue.addAll(Arrays.asList(persons));
+    public Queue(int[] persons) {
+        List<Integer> list = Arrays.stream(persons).boxed().collect(Collectors.toList());
+        this.queue.addAll(list);
     }
 
     public List<Integer> getQueue() {

@@ -1,6 +1,15 @@
 public class App {
     public static void main(String[] args) {
 
+        int[][] queues1 = {
+                new int[0],     // 0 (ground floor)
+                new int[]{2,3}, // 1
+                new int[]{1},   // 2
+                new int[0],     // 3
+                new int[]{6,2}, // 4
+                new int[0],     // 5
+                new int[]{4,1}, // 6
+        };
 
 
     }

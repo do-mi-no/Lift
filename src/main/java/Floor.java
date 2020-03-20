@@ -4,8 +4,16 @@ public class Floor {
     public Floor() {
     }
 
+    public Floor(Queue liftQueue) {
+        this.liftQueue = liftQueue;
+    }
+
     public Queue getLiftQueue() {
         return liftQueue;
+    }
+
+    public void setLiftQueue(Queue liftQueue) {
+        this.liftQueue = liftQueue;
     }
 
     @Override

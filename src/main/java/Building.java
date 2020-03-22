@@ -1,38 +1,32 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Building {
-    private Map<Integer, Floor> floors = new HashMap<>();
+    private List<Floor> floors = new ArrayList<>();
 
     public Building(int[][] queues) {
         if (queues.length == 0) {
             throw new IllegalArgumentException("Input queues can't be empty.");
         }
         for (int i = 0; i < queues.length; i++) {
-            Queue queue = new Queue(queues[i]);
-            floors.put(i, new Floor(queue));
+            floors.add(new Floor(i, queues[i]));
         }
     }
 
-    public List<Floor> getAllQueues(int floorNum) {
-        return new ArrayList<>(floors.values());
+    public List<Floor> getFloors() {
+        return floors;
     }
 
     public Floor getFloor(int floorNum) {
-        return floors.get(floorNum);
+        return  floors.stream().filter(floor -> floor.getLevel() == floorNum)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Floor '" + floorNum + "' is out of range."));
     }
 
-    public List<Integer> getFloorQueue(int floorNumber) {
-        return floors.get(floorNumber).getLiftQueue().getQueue();
+    public Queue<Integer> getFloorQueueUp(int floorNumber) {
+        return getFloor(floorNumber).getQueueUp();
     }
-
-    public List<Integer> getFloorIndexes() {
-        return new ArrayList<>(floors.keySet());
+    public Queue<Integer> getFloorQueueDown(int floorNumber) {
+        return getFloor(floorNumber).getQueueDown();
     }
-
-
 
     @Override
     public String toString() {

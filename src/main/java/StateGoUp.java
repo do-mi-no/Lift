@@ -1,9 +1,16 @@
 public class StateGoUp implements State {
     @Override
     public void next(Controller controller) {
-        //todo:
+        controller.dropOffPassengers();
+        controller.takeAsManyAsPossibleFromQueueUp();
 
-        int nextStop = controller.getNextStopGoingUp();
+        final Integer nextStopUp = controller.getNextStopUp();
+
+        if (nextStopUp != null) {
+            controller.sendLiftToTheFloor(nextStopUp);
+        } else {
+            controller.setState(new StateGoDown());
+        }
     }
 
     public String toString() {

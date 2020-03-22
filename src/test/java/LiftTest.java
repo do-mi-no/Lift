@@ -15,7 +15,7 @@ class LiftTest {
 
         //then
         assertEquals(0, lift.getOccupancy());
-        assertThrows(IllegalArgumentException.class, () -> lift.removePerson(2));
+        assertThrows(IllegalArgumentException.class, () -> lift.dropPersonOff(2));
 
         //when
         lift.addPerson(7);
@@ -29,7 +29,7 @@ class LiftTest {
         assertTrue(lift.getPassengers().contains(7));
 
         //when
-        lift.removePerson(3);
+        lift.dropPersonOff(3);
 
         //then
         assertEquals(2, lift.getOccupancy());

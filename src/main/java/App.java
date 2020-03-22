@@ -1,8 +1,10 @@
+import java.util.concurrent.TimeUnit;
+
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         int[][] queues1 = {
-                new int[0],      // 0 (ground floor)
+                new int[]{4},    // 0 (ground floor)
                 new int[]{2, 3}, // 1
                 new int[]{1},    // 2
                 new int[0],      // 3
@@ -15,9 +17,17 @@ public class App {
         final Lift lift = Lift.getInstance();
         final Controller controller = new Controller(building, lift);
 
-        System.out.println("controller.getState() = " + controller.getState());
-        controller.nextFloor();
-        System.out.println("controller.getState() = " + controller.getState());
+        System.out.println("building = " + building);
+
+        while (controller.isAnyRequest()){
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println("controller.getState() = " + controller.getState());
+            controller.nextFloor();
+            System.out.println("lift = " + lift);
+            System.out.println("controller.getRequestCount() = " + controller.getRequestCount());
+            System.out.println("lift.getOccupancy() = " + lift.getOccupancy());
+        }
+
 
 
     }

@@ -43,17 +43,17 @@ public class Lift {
     Queue<Integer> getPassengers() {
         return passengers;
     }
-
-    void addPerson(Integer passenger) {
-        if (isFull()) {
-            throw new IllegalArgumentException("The lift is already full.");
-        }
-        passengers.add(passenger);
-    }
-
-    void dropPersonOff(Integer passenger) {
-        passengers.remove(passenger);
-    }
+//
+//    void addPerson(Integer passenger) {
+//        if (isFull()) {
+//            throw new IllegalArgumentException("The lift is already full.");
+//        }
+//        passengers.add(passenger);
+//    }
+//
+//    void dropPersonOff(Integer passenger) {
+//        passengers.remove(passenger);
+//    }
 
     int getOccupancy() {
         return (int) passengers.stream().filter(Objects::nonNull).count();

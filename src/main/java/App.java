@@ -16,21 +16,22 @@ public class App {
         Lift.init(10);
         final Lift lift = Lift.getInstance();
         final Controller controller = new Controller(building, lift);
+        final BuildingView buildingView = new BuildingView(controller);
 
-        System.out.println("building = " + building);
-
+//        controller.nextFloor();
+//        controller.nextFloor();
+//        buildingView.printState();
+//
         while (controller.isAnyRequest()){
             TimeUnit.SECONDS.sleep(1);
-            System.out.println("controller.getState() = " + controller.getState());
+            buildingView.printState();
+            TimeUnit.SECONDS.sleep(1);
             controller.nextFloor();
-            System.out.println("lift = " + lift);
-            System.out.println("controller.getRequestCount() = " + controller.getRequestCount());
-            System.out.println("lift.getOccupancy() = " + lift.getOccupancy());
+            buildingView.printState();
         }
 
-
-
     }
+
 }
 
 //          BEFORE (people waiting in queues)             AFTER (people at their destinations)

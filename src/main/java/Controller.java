@@ -33,35 +33,26 @@ public class Controller {
     public void takeAsManyAsPossibleFromQueueUp() {
         final Queue<Integer> queueToTake = building.getFloorQueueUp(lift.getLevel());
         while (queueToTake.size() > 0 && !lift.isFull()) {
-            lift.addPerson(queueToTake.poll());
+            lift.getPassengers().add(queueToTake.poll());
         }
     }
 
     public void takeAsManyAsPossibleFromQueueDown() {
         final Queue<Integer> queueToTake = building.getFloorQueueDown(lift.getLevel());
         while (queueToTake.size() > 0 && !lift.isFull()) {
-            lift.addPerson(queueToTake.poll());
+            lift.getPassengers().add(queueToTake.poll());
         }
     }
-
-//    public void takeAsManyAsPossibleFromQueueDown() {
-//        while (!lift.isFull()) {
-//            Integer person = building.getFloorQueueDown(lift.getLevel()).poll();
-//            lift.getPassengers().add(person);
-//        }
-//    }
 
     public void sendLiftToTheFloor(Integer floorNumber) {
         lift.setLevel(floorNumber);
     }
 
-    ;
-
     public Integer getNextStopUpFromFloors() {
         return building.getFloors().stream()
                 .filter(floor -> floor.getLevel() > lift.getLevel())
                 .filter(floor -> floor.getQueueUp().size() > 0)
-                .findFirst().map(Floor::getLevel).orElse(null);     //todo:
+                .findFirst().map(Floor::getLevel).orElse(null);
         //.findFirst().map(Floor::getLevel).orElseThrow(() -> new IllegalArgumentException("No calls from floors above."));
     }
 
@@ -118,25 +109,30 @@ public class Controller {
     }
 
     public void dropOffPassengers() {
-        if (lift.getPassengers().size() > 0)
-            lift.getPassengers().removeIf(person -> person.equals(lift.getLevel()));
+//        if (lift.getPassengers().size() > 0)
+//            lift.getPassengers().removeIf(person -> person.equals(lift.getLevel()));        //todo: instead of removing, implement moving to queueDelivered
+        while (lift.getPassengers().contains(lift.getLevel())) {
+            final boolean droppedOff = lift.getPassengers().remove(lift.getLevel());
+            final Queue<Integer> queueDelivered = building.getFloor(lift.getLevel()).getQueueDelivered();
+            if (droppedOff) {
+                queueDelivered.add(lift.getLevel());
+            }
+        }
     }
 
-
-    public int getRequestCount() {
-        final int liftOccupancy = lift.getOccupancy();
-        final int waitingCount = (int) building.getFloors().stream()
-                .map(floor -> floor.getQueueUp().size() + floor.getQueueDown()
-                        .size()).count();
-        return liftOccupancy + waitingCount;
-    }
+//    public int getRequestCount() {
+//        final int liftOccupancy = lift.getOccupancy();
+//        final int waitingCount = (int) building.getFloors().stream()
+//                .map(floor -> floor.getQueueUp().size() + floor.getQueueDown()
+//                        .size()).count();
+//        return liftOccupancy + waitingCount;
+//    }
 
     public boolean isAnyRequest() {
         final int liftOccupancy = lift.getOccupancy();
         final long waitingCount = building.getFloors().stream()
                 .map(floor -> (floor.getQueueUp().size() + floor.getQueueDown().size()))
                 .reduce(0, Integer::sum);
-        System.out.println("waitingCount = " + waitingCount);
         return liftOccupancy + waitingCount > 0;
     }
 }

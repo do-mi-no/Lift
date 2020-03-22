@@ -8,6 +8,7 @@ class Floor {
     private int level;
     private Queue<Integer> queueUp = new LinkedList<>();
     private Queue<Integer> queueDown = new LinkedList<>();
+    private Queue<Integer> queueDelivered = new LinkedList<>();
 
     public Floor(int level, int[] persons) {
         this.level = level;
@@ -30,16 +31,10 @@ class Floor {
     public Queue<Integer> getQueueDown() {
         return queueDown;
     }
-
+    public Queue<Integer> getQueueDelivered() {
+        return queueDelivered;
+    }
     //---------------------------------------------------------------------------------------------
-
-    public Integer takePersonUp() {
-        return queueUp.poll();
-    }
-
-    public Integer takePersonDown() {
-        return queueDown.poll();
-    }
 
     @Override
     public String toString() {
@@ -50,5 +45,3 @@ class Floor {
                 '}';
     }
 }
-
-//throw new IllegalArgumentException("Queue doesn't contain '" + person + "'.");

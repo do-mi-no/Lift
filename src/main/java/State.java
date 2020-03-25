@@ -5,4 +5,5 @@ public interface State {
     default String printInfo(){
         return getClass().getName();
     }
+
 }

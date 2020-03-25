@@ -1,3 +1,4 @@
+import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
 public class App {
@@ -12,50 +13,62 @@ public class App {
                 new int[0],      // 5
                 new int[]{4, 1}, // 6
         };
-        final Building building = new Building(queues1);
-        Lift.init(10);
-        final Lift lift = Lift.getInstance();
-        final Controller controller = new Controller(building, lift);
+        int[][] queues2 = {
+                new int[]{4, 3, 1, 1, 1, 1, 1},    // 0 (ground floor)
+                new int[]{2, 3, 4, 5, 6}, // 1
+                new int[]{1, 3, 5, 3, 1},    // 2
+                new int[0],      // 3
+                new int[]{6, 2, 4, 4, 4}, // 4
+                new int[0],      // 5
+                new int[]{4, 1, 0, 0, 0, 0 }, // 6
+        };
+//        final Building building = new Building(queues1);
+        final Building building = new Building(queues2);
+//        final Building building = new Building(getRandomMatrix(7, 9));
+//        final Building building = new Building(getRandomMatrix(7,3));
+        final Lift lift = new Lift(10);
+        Controller controller = new Controller(building, lift);
         final BuildingView buildingView = new BuildingView(controller);
 
-//        controller.nextFloor();
-//        controller.nextFloor();
-//        buildingView.printState();
-//
-        while (controller.isAnyRequest()){
-            TimeUnit.SECONDS.sleep(1);
-            buildingView.printState();
-            TimeUnit.SECONDS.sleep(1);
-            controller.nextFloor();
-            buildingView.printState();
+//        int steps = 1;
+//        while (steps > 0) {
+//            TimeUnit.MILLISECONDS.sleep(100);
+//            buildingView.printSnapshot();
+//            controller.next();
+//            steps--;
+//        }
+
+        while (controller.isAnyRequest() || lift.getLevel() != 0) {
+            pressAnyKeyToContinue();
+            controller.next();
+            buildingView.printSnapshot();
         }
+
+//        while (controller.isAnyRequest() || lift.getLevel() != 0) {
+//            TimeUnit.MILLISECONDS.sleep(100);
+//            buildingView.printSnapshot();
+//            controller.next();
+//        }
 
     }
 
-}
+    private static void pressAnyKeyToContinue() {
+        System.out.println("Press Enter key to continue...");
+        try {
+            System.in.read();
+        } catch (Exception e) {
+        }
+    }
 
-//          BEFORE (people waiting in queues)             AFTER (people at their destinations)
-//          +--+                                          +--+
-//          /----------------|  |----------------\        /----------------|  |----------------\
-//        10|                |  | 1,4,3,2        |      10|             10 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         9|                |  | 1,10,2         |       9|                |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         8|                |  |                |       8|                |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         7|                |  | 3,6,4,5,6      |       7|                |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         6|                |  |                |       6|          6,6,6 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         5|                |  |                |       5|            5,5 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         4|                |  | 0,0,0          |       4|          4,4,4 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         3|                |  |                |       3|            3,3 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         2|                |  | 4              |       2|          2,2,2 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         1|                |  | 6,5,2          |       1|            1,1 |  |                |
-//          |----------------|  |----------------|        |----------------|  |----------------|
-//         G|                |  |                |       G|          0,0,0 |  |                |
-//          |====================================|        |====================================|
+    private static int[][] getRandomMatrix(int floorCount, int maxQueueLength) {
+        int[][] queues = new int[floorCount][maxQueueLength];
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < floorCount; i++) {
+            for (int j = 0; j < maxQueueLength; j++) {
+                queues[i][j] = random.nextInt(floorCount);
+            }
+        }
+        return queues;
+    }
+
+}

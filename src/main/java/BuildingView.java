@@ -32,18 +32,19 @@ public class BuildingView {
         String queue = controller.getBuilding().getFloor(level).getQueueUp().stream()
                 .map(integer -> String.format("%d-", integer))
                 .reduce("", String::concat);
-        return  removeLastCharIfNotEmpty("\u2191" + queue);
+        return  " " + removeLastCharIfNotEmpty("\u2191" + queue);
     }
     public String getFloorQueueDown(int level) {
         String queue = controller.getBuilding().getFloor(level).getQueueDown().stream()
                 .map(integer -> String.format("%d-", integer))
                 .reduce("", String::concat);
-        return  removeLastCharIfNotEmpty("\u2193" + queue);
+        return  " " + removeLastCharIfNotEmpty("\u2193" + queue);
     }
     public String getFloorQueueDelivered(int level) {
-        return controller.getBuilding().getFloor(level).getQueueDelivered().stream()
+        String queue = controller.getBuilding().getFloor(level).getQueueDelivered().stream()
                 .map(integer -> String.format("%d-", integer))
                 .reduce("", String::concat);
+        return removeLastCharIfNotEmpty(queue) + " ";
     }
     public String getLiftPassengers() {
         final String passengers = controller.getLift().getPassengers().stream()
@@ -61,10 +62,14 @@ public class BuildingView {
     }
 
     public String getFloorInfo(int level) {
+        String transfer = wallV;
+        if(level == controller.getLift().getLevel()){
+            transfer = " ";
+        }
         return String.format("%s%40s%s%s%s%-40s%s",
                 wallV, getFloorQueueDelivered(level),
-                wallV, getFloorLiftInfo(level),
-                wallV, getFloorQueueUp(level) + getFloorQueueDown(level),
+                transfer, getFloorLiftInfo(level),
+                transfer, getFloorQueueUp(level) + getFloorQueueDown(level),
                 wallV);
     }
 
@@ -93,14 +98,14 @@ public class BuildingView {
     }
 
     public void printFoundation() {
-        System.out.printf("%s%40s%s%s%s%-40s%s%n",
+        System.out.printf("%s%40s%s%s%s%-40s%s",
                 joinULR, wallH.repeat(40),
                 joinULR, wallH.repeat(27),
                 joinULR, wallH.repeat(40),
                 joinULR);
     }
 
-    public void printState() {
+    public void printSnapshot() {
         final List<Floor> floors = controller.getBuilding().getFloors();
         List<Floor> floorsReversed = new ArrayList<>(floors);
         Collections.reverse(floorsReversed);
@@ -114,6 +119,9 @@ public class BuildingView {
             }
         }
         printFoundation();
+        System.out.print("s=" + controller.getState().getClass().getName());
+        System.out.print("         /lastMoveUp=" + controller.getLift().getRoute().lastMoveUp());
+        System.out.println("         /liftPath=" + controller.getLift().getRoute().getLiftPath());
         System.out.println();
     }
 
@@ -125,3 +133,4 @@ public class BuildingView {
 
 //https://unicode.org/charts/nameslist/n_2500.html
 //https://unicode.org/charts/nameslist/n_2190.html
+//https://en.wikipedia.org/wiki/Box-drawing_character

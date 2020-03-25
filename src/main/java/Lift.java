@@ -1,31 +1,17 @@
 import java.util.*;
 
 public class Lift {
-    private static Lift lift = null;
     private final int capacity;
-
     private int level = 0;
+    private Route route = new Route();
     private final Queue<Integer> passengers = new LinkedList<>();
 
-    private Lift(int capacity) {
+    Lift(int capacity) {
+        int minCap = 1;
+        if (capacity < minCap) {
+            throw new IllegalArgumentException("Lift capacity must be at least " + minCap + ".");
+        }
         this.capacity = capacity;
-    }
-
-    synchronized static void init(int capacity) {
-        if (lift != null) {
-            throw new AssertionError("Lift already initialized.");
-        }
-        if (capacity < 5) {
-            throw new IllegalArgumentException("Lift capacity must be at least 5.");
-        }
-        lift = new Lift(capacity);
-    }
-
-    static Lift getInstance() {
-        if (lift == null) {
-            throw new AssertionError("You have to call init first.");
-        }
-        return lift;
     }
 
     public int getCapacity() {
@@ -40,27 +26,24 @@ public class Lift {
         this.level = level;
     }
 
+    public Route getRoute() {
+        return route;
+    }
+
     Queue<Integer> getPassengers() {
         return passengers;
     }
-//
-//    void addPerson(Integer passenger) {
-//        if (isFull()) {
-//            throw new IllegalArgumentException("The lift is already full.");
-//        }
-//        passengers.add(passenger);
-//    }
-//
-//    void dropPersonOff(Integer passenger) {
-//        passengers.remove(passenger);
-//    }
 
     int getOccupancy() {
         return (int) passengers.stream().filter(Objects::nonNull).count();
     }
 
-    boolean isFull() {
-        return passengers.stream().filter(Objects::nonNull).count() >= capacity;
+    boolean lastMoveUp(){
+        return route.lastMoveUp();
+    }
+
+    boolean isNotFull() {
+        return passengers.stream().filter(Objects::nonNull).count() < capacity;
     }
 
     @Override

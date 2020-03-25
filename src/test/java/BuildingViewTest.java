@@ -1,7 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class BuildingViewTest {
 
     @Test
@@ -17,17 +15,16 @@ class BuildingViewTest {
                 new int[]{4, 1}, // 6
         };
         final Building building = new Building(queues1);
-        Lift.init(10);
-        final Lift lift = Lift.getInstance();
-        final Controller controller = new Controller(building, lift);
+        final Lift lift = new Lift(10);
+        Controller controller = new Controller(building, lift);
         final BuildingView buildingView = new BuildingView(controller);
 
         //when
-        controller.nextFloor();
-        controller.nextFloor();
+        controller.next();
+        controller.next();
 
         //then
-        buildingView.printState();
+        buildingView.printSnapshot();
     }
 
     @Test
@@ -43,14 +40,13 @@ class BuildingViewTest {
                 new int[]{4, 1}, // 6
         };
         final Building building = new Building(queues1);
-//        Lift.init(10);
-        final Lift lift = Lift.getInstance();
-        final Controller controller = new Controller(building, lift);
+        final Lift lift = new Lift(10);
+        Controller controller = new Controller(building, lift);
         final BuildingView buildingView = new BuildingView(controller);
 
         //when
-        controller.nextFloor();
-        controller.nextFloor();
+        controller.next();
+        controller.next();
 
         //then
         buildingView.printRoof();

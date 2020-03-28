@@ -1,5 +1,6 @@
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class App {
     public static void main(String[] args) throws InterruptedException {
@@ -22,10 +23,8 @@ public class App {
                 new int[0],      // 5
                 new int[]{4, 1, 0, 0, 0, 0 }, // 6
         };
-//        final Building building = new Building(queues1);
-        final Building building = new Building(queues2);
-//        final Building building = new Building(getRandomMatrix(7, 9));
-//        final Building building = new Building(getRandomMatrix(7,3));
+        final Building building = new Building(queues1);
+//        final Building building = new Building(queues2);
         final Lift lift = new Lift(10);
         Controller controller = new Controller(building, lift);
         final BuildingView buildingView = new BuildingView(controller);
@@ -33,8 +32,8 @@ public class App {
 //        int steps = 1;
 //        while (steps > 0) {
 //            TimeUnit.MILLISECONDS.sleep(100);
-//            buildingView.printSnapshot();
 //            controller.next();
+//            buildingView.printSnapshot();
 //            steps--;
 //        }
 
@@ -46,10 +45,9 @@ public class App {
 
 //        while (controller.isAnyRequest() || lift.getLevel() != 0) {
 //            TimeUnit.MILLISECONDS.sleep(100);
-//            buildingView.printSnapshot();
 //            controller.next();
+//            buildingView.printSnapshot();
 //        }
-
     }
 
     private static void pressAnyKeyToContinue() {
@@ -58,17 +56,6 @@ public class App {
             System.in.read();
         } catch (Exception e) {
         }
-    }
-
-    private static int[][] getRandomMatrix(int floorCount, int maxQueueLength) {
-        int[][] queues = new int[floorCount][maxQueueLength];
-        SecureRandom random = new SecureRandom();
-        for (int i = 0; i < floorCount; i++) {
-            for (int j = 0; j < maxQueueLength; j++) {
-                queues[i][j] = random.nextInt(floorCount);
-            }
-        }
-        return queues;
     }
 
 }

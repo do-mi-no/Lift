@@ -31,7 +31,7 @@ class ControllerTest {
         //when
         controller.next();
         buildingView.printSnapshot();
-        //then level 0 - AFTER ARRIVED
+        //then level 0 - after arrived
         assertEquals(0, liftLevel());
         assertEquals(0, liftOccupancy());
         assertEquals(1, nextStop());
@@ -41,7 +41,7 @@ class ControllerTest {
         //when
         controller.next();
         buildingView.printSnapshot();
-        //then level 0 - AFTER TRANSFER
+        //then level 0 - after transfer
         assertEquals(0, liftLevel());
         assertEquals(1, liftOccupancy());
         assertEquals(1, nextStop());
@@ -51,31 +51,26 @@ class ControllerTest {
         //when
         controller.next();
         buildingView.printSnapshot();
-        //then level 1 - before transfer
+        //then level 1 - after arrived
         assertEquals(1, liftLevel());
         assertEquals(1, liftOccupancy());
-//        assertEquals(2, nextStop());
         assertTrue(liftContains(4));
         assertTrue(queueUpFromFloorContains(1, 2, 3));
 
         //when
         controller.next();
-        controller.next();
         buildingView.printSnapshot();
         //then level 1 - after transfer
         assertEquals(1, liftLevel());
-        System.out.println("lift = " + lift);
         assertEquals(3, liftOccupancy());
         assertEquals(2, nextStop());
         assertTrue(liftContains(4, 2, 3));
-        assertEquals(0, queueUp(1).size());
 
         //when
         controller.next();
-        controller.next();
         buildingView.printSnapshot();
-        //then level 2 - before transfer
-        assertEquals(2, liftLevel()); //todo:
+        //then level 2 - after arrived
+        assertEquals(2, liftLevel());
         assertEquals(3, liftOccupancy());
         assertEquals(3, nextStop());
         assertTrue(liftContains(4, 2, 3));
@@ -91,10 +86,142 @@ class ControllerTest {
         assertTrue(liftContains(4, 3));
         assertTrue(queueDownFromFloorContains(2, 1));
 
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 3 - after arrived
+        assertEquals(3, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(4, nextStop());
+        assertTrue(liftContains(4, 3));
+        assertTrue(queueDownIsEmpty(3));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 3 - after transfer
+        assertEquals(3, liftLevel());
+        assertEquals(1, liftOccupancy());
+        assertEquals(4, nextStop());
+        assertTrue(liftContains(4));
+        assertTrue(queueDownIsEmpty(3));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 4 - after arrived
+        assertEquals(4, liftLevel());
+        assertEquals(1, liftOccupancy());
+        assertEquals(6, nextStop());
+        assertTrue(liftContains(4));
+        assertTrue(queueDownFromFloorContains(4, 2));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 4 - after transfer
+        assertEquals(4, liftLevel());
+        assertEquals(1, liftOccupancy());
+        assertEquals(6, nextStop());
+        assertTrue(liftContains(6));
+        assertTrue(queueDownFromFloorContains(4, 2));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 6 - after arrived
+        assertEquals(6, liftLevel());
+        assertEquals(1, liftOccupancy());
+        assertEquals(4, nextStop());
+        assertTrue(liftContains(6));
+        assertTrue(queueDownFromFloorContains(6, 1));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 6 - after transfer
+        assertEquals(6, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(4, nextStop());
+        assertTrue(liftContains(1, 4));
+        assertTrue(queueDownIsEmpty(6));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 4 - after arrived
+        assertEquals(4, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(2, nextStop());
+        assertTrue(liftContains(1, 4));
+        assertTrue(queueDownFromFloorContains(4, 2));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 4 - after transfer
+        assertEquals(4, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(2, nextStop());
+        assertTrue(liftContains(1, 2));
+        assertTrue(queueDownIsEmpty(4));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 2 - after arrived
+        assertEquals(2, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(1, nextStop());
+        assertTrue(liftContains(1, 2));
+        assertTrue(queueDownFromFloorContains(2, 1));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 2 - after transfer
+        assertEquals(2, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(1, nextStop());
+        assertTrue(liftContains(1));
+        assertTrue(queueDownIsEmpty(2));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 1 - after arrived
+        assertEquals(1, liftLevel());
+        assertEquals(2, liftOccupancy());
+        assertEquals(0, nextStop());
+        assertTrue(liftContains(1, 1));
+        assertTrue(queueDownIsEmpty(1));
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 1 - after transfer
+        assertEquals(1, liftLevel());
+        assertEquals(0, liftOccupancy());
+        assertEquals(0, nextStop());
+        assertTrue(queueDownIsEmpty(1));
+
+
+        //when
+        controller.next();
+        buildingView.printSnapshot();
+        //then level 0 - after arrived
+        assertEquals(0, liftLevel());
+        assertEquals(0, liftOccupancy());
+        assertEquals(0, controller.getBuilding().getFloors().stream().filter(floor -> floor.getQueueUp().size() > 0).count());
+        assertEquals(0, controller.getBuilding().getFloors().stream().filter(floor -> floor.getQueueDown().size() > 0).count());
     }
 
     boolean queueUpIsEmpty(int floor) {
         return building.getFloor(floor).getQueueUp().size() == 0;
+    }
+
+    boolean queueDownIsEmpty(int floor) {
+        return building.getFloor(floor).getQueueDown().size() == 0;
     }
 
     private Integer nextStop() {
@@ -103,14 +230,6 @@ class ControllerTest {
 
     private Queue<Integer> queueUp(int floor) {
         return building.getFloor(floor).getQueueUp();
-    }
-
-    private Queue<Integer> queueDown(int floor) {
-        return building.getFloor(floor).getQueueDown();
-    }
-
-    private Queue<Integer> queueLift() {
-        return lift.getPassengers();
     }
 
     private int liftLevel() {

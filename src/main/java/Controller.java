@@ -3,7 +3,7 @@ import java.util.Queue;
 public class Controller {
     private Building building;
     private Lift lift;
-    private State state = new StateArrived();
+    private State state = new StateInit();
     private NextStop nextStop;
 
     public Controller(Building building, Lift lift) {
@@ -32,6 +32,11 @@ public class Controller {
         return nextStop.getNextStop();
     }
 
+    public int[] getResult(){
+        return lift.getRoute().getLiftPath().stream()
+                .mapToInt(i -> i).toArray();
+    }
+
     void next() {
         state.next(this);
     }                     // State Pattern
@@ -48,10 +53,14 @@ public class Controller {
         while (queueToTake.size() > 0 && lift.isNotFull()) {
             lift.getPassengers().add(queueToTake.poll());
         }
+        System.out.println("take-tu-bylem");
     }
 
     public void takeAsManyPassengersAsPossible() {
-        if (nextStop.getNextStop() > lift.getLevel()) {
+        Integer stop = nextStop.getNextStop();
+        final int level = lift.getLevel();
+        boolean liftGoesUp = stop > level;
+        if (liftGoesUp) {
             takeAsManyPassengersAsPossibleFromQueueUp();
         } else {
             takeAsManyPassengersAsPossibleFromQueueDown();

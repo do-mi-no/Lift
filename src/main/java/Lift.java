@@ -49,7 +49,6 @@ public class Lift {
     @Override
     public String toString() {
         return "Lift{" +
-                "capacity=" + capacity +
                 ", level=" + level +
                 ", passengers=" + passengers +
                 '}';

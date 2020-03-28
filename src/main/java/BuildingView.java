@@ -119,9 +119,8 @@ public class BuildingView {
             }
         }
         printFoundation();
-        System.out.print("s=" + controller.getState().getClass().getName());
-        System.out.print("         /lastMoveUp=" + controller.getLift().getRoute().lastMoveUp());
-        System.out.println("         /liftPath=" + controller.getLift().getRoute().getLiftPath());
+//        System.out.print("         /lastMoveUp=" + controller.getLift().getRoute().lastMoveUp());
+//        System.out.println("         /liftPath=" + controller.getLift().getRoute().getLiftPath());
         System.out.println();
     }
 

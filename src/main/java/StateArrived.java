@@ -3,9 +3,10 @@ public class StateArrived implements State {
     @Override
     public void next(Controller controller) {
 
-        controller.addStopToRoute();
+        controller.dropOffPassengers();
+        controller.takeAsManyPassengersAsPossible();
 
-        controller.setState(new StateTransfer());
+        controller.setState(new StateMoveOn());
 
     }
 

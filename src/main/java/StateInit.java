@@ -5,6 +5,8 @@ public class StateInit implements State {
 
         controller.setState(new StateArrived());
 
+        controller.addStopToRoute();
+
     }
 
     public String toString() {

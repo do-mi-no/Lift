@@ -6,6 +6,8 @@ public class StateMoveOn implements State {
         Integer nextStop = controller.getNextStop();
         controller.sendLiftTo(nextStop);
 
+        controller.addStopToRoute();
+
         controller.setState(new StateArrived());
 
     }

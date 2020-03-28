@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Objects;
+
 public class NextStop {
 
     private final Building building;
@@ -8,81 +11,73 @@ public class NextStop {
         this.lift = lift;
     }
 
-    private Integer getNextStopUpFromFloors() {
+    public Integer getNextStop() {
+        Integer result = null;
+        boolean isCallAbove = getNextStopAbove() != null;
+        boolean isCallBelow = getNextStopBelow() != null;
+        boolean isLastMoveUp = lift.lastMoveUp();
+        if (isLastMoveUp) {
+            if (isCallAbove) {      //todo: incorrect name...
+                result = getNextStopAbove();        // lift (still) goes up
+            } else {
+                result = getNextStopBelow();        // changing direction (lift goes down)
+                if (result == null)
+                    result = 0;                     // no more calls - return to the ground floor
+            }
+        } else {                                    // isLastMoveDown
+            if (isCallBelow) {
+                result = getNextStopBelow();        // lift (still) goes down
+            } else {
+                result = getNextStopAbove();        // changing direction (lift goes up)
+                if (result == null)
+                    result = 0;                     // no more calls - return to the ground floor
+            }
+        }
+        System.out.println("nextStop = " + result);
+        return result;
+    }
+
+    public Integer getNextStopAbove() {
+        return getMinOfFirstThreeIfNullGetLast(
+                getCallUpFromFloorAbove(),
+                getCallUpFromCurrentFloor(),
+                getCallUpFromLift(),
+                getCallDownFromTopFloorAboveLift());
+
+    }
+
+    public Integer getNextStopBelow() {
+        return getMaxOfFirstThreeIfNullGetLast(
+                getCallDownFromFloorBelow(),
+                getCallDownFromCurrentFloor(),
+                getCallDownFromLift(),
+                getCallUpFromLowermostFloorBelowLift());
+    }
+
+    private Integer getCallUpFromFloorAbove() {
         return building.getFloors().stream()
                 .filter(floor -> floor.getLevel() > lift.getLevel())
                 .filter(floor -> floor.getQueueUp().size() > 0)
                 .findFirst().map(Floor::getLevel).orElse(null);
     }
 
-    private Integer getNextStopDownFromFloors() {
-        return building.getFloors().stream()
-                .filter(floor -> floor.getLevel() < lift.getLevel())
-                .filter(floor -> floor.getQueueDown().size() > 0)
-                .reduce((floor, floor2) -> floor2).map(Floor::getLevel).orElse(null);
+    private Integer getCallUpFromCurrentFloor() {   //todo:...........................
+        return building.getFloors().get(lift.getLevel()).getQueueUp().stream()
+                .min(Integer::compareTo).orElse(null);
     }
 
-    private Integer getNextStopUpFromLift() {
+    private Integer getCallDownFromCurrentFloor() {   //todo:...........................
+        return building.getFloors().get(lift.getLevel()).getQueueDown().stream()
+                .max(Integer::compareTo).orElse(null);
+    }
+
+    private Integer getCallUpFromLift() {
         return lift.getPassengers().stream()
                 .filter(person -> person > lift.getLevel())
                 .min(Integer::compareTo).orElse(null);
     }
 
-    private Integer getNextStopDownFromLift() {
-        return lift.getPassengers().stream()
-                .filter(person -> person < lift.getLevel())
-                .max(Integer::compareTo).orElse(null);
-    }
-
-    public Integer getNextStopUp() {
-        final Integer s1 = getNextStopUpFromFloors();
-        final Integer s2 = getNextStopUpFromLift();
-        Integer result = null;
-        if (s1 != null && s2 != null)
-            result = Math.min(s1, s2);
-        if (s1 == null)
-            result = s2;
-        if (s2 == null)
-            result = s1;
-        if (result == null)
-            result = getTopFloorAboveLiftWithCallDown();
-        return result;
-    }
-
-    public Integer getNextStopDown() {
-        final Integer s1 = getNextStopDownFromFloors();
-        final Integer s2 = getNextStopDownFromLift();
-        Integer result = null;
-        if (s1 != null && s2 != null)
-            result = Math.max(s1, s2);
-        if (s1 == null)
-            result = s2;
-        if (s2 == null)
-            result = s1;
-        if (result == null)
-            result = getTopFloorAboveLiftWithCallDown();                    //todo: check whether it solves 'nullpointer at the end'
-        if (result == null)
-            result = 0;
-        return result;
-    }
-
-    public Integer getNextStop() {          //todo: ITS CRAZY!
-        Integer result = null;
-        if (lift.lastMoveUp()) {
-            result = getNextStopUp();
-            if (result == null)
-                result = getNextStopDown();
-        } else {
-            result = getNextStopDown();
-            if (result == null)
-                result = getNextStopUp();
-//            if (result == null)
-//                result = 0;
-        }
-        return result;         //todo: testing needed!!! and some refactoring...
-    }
-
-    private Integer getTopFloorAboveLiftWithCallDown() {
+    private Integer getCallDownFromTopFloorAboveLift() {
         return building.getFloors().stream()
                 .filter(floor -> floor.getLevel() > lift.getLevel())
                 .filter(floor -> floor.getQueueDown().size() > 0)
@@ -90,4 +85,36 @@ public class NextStop {
                 .map(Floor::getLevel).orElse(null);
     }
 
+    private Integer getCallDownFromFloorBelow() {
+        return building.getFloors().stream()
+                .filter(floor -> floor.getLevel() < lift.getLevel())
+                .filter(floor -> floor.getQueueDown().size() > 0)
+                .reduce((floor, floor2) -> floor2).map(Floor::getLevel).orElse(null);
+    }
+
+    private Integer getCallDownFromLift() {
+        return lift.getPassengers().stream()
+                .filter(person -> person < lift.getLevel())
+                .max(Integer::compareTo).orElse(null);
+    }
+
+    private Integer getCallUpFromLowermostFloorBelowLift() {
+        return building.getFloors().stream()
+                .filter(floor -> floor.getLevel() < lift.getLevel())
+                .filter(floor -> floor.getQueueUp().size() > 0)
+                .findFirst()
+                .map(Floor::getLevel).orElse(null);
+    }
+
+    public Integer getMaxOfFirstThreeIfNullGetLast(Integer w, Integer x, Integer y, Integer z) {
+        return Arrays.asList(w, x, y).stream().filter(Objects::nonNull)
+                .max(Integer::compareTo).orElse(z);
+    }
+
+    public Integer getMinOfFirstThreeIfNullGetLast(Integer w, Integer x, Integer y, Integer z) {
+        return Arrays.asList(w, x, y).stream().filter(Objects::nonNull)
+                .min(Integer::compareTo).orElse(z);
+    }
+
 }
+
